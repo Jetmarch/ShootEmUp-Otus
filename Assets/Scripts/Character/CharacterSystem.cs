@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    public sealed class CharacterSystem : MonoBehaviour
+    public sealed class CharacterSystem : MonoBehaviour, IGameFixedUpdateListener
     {
         public Action<BulletSystem.Args> OnRequestBullet;
 
@@ -19,16 +19,9 @@ namespace ShootEmUp
 
         private bool _fireRequired;
 
-        private void FixedUpdate()
+        private void Start()
         {
-            if (_fireRequired)
-            {
-                ShootBullet();
-
-                _fireRequired = false;
-            }
-
-            _moveComponent.MoveByRigidbodyVelocity(new Vector2(_horizontalDirection, 0) * Time.fixedDeltaTime);
+            IGameListener.Register(this);
         }
 
         private void ShootBullet()
@@ -64,6 +57,18 @@ namespace ShootEmUp
         public void StopMove()
         {
             _horizontalDirection = 0;
+        }
+
+        public void OnFixedUpdate(float delta)
+        {
+            if (_fireRequired)
+            {
+                ShootBullet();
+
+                _fireRequired = false;
+            }
+
+            _moveComponent.MoveByRigidbodyVelocity(new Vector2(_horizontalDirection, 0) * delta);
         }
     }
 }

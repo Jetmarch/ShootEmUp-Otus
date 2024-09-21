@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    public sealed class BulletSystem : MonoBehaviour
+    public sealed class BulletSystem : MonoBehaviour, IGameFixedUpdateListener
     {
         public struct Args
         {
@@ -24,9 +24,9 @@ namespace ShootEmUp
 
         private readonly HashSet<Bullet> _activeBullets = new();
 
-        private void FixedUpdate()
+        private void Start()
         {
-            _levelBoundsChecker.CheckLevelBounds(_activeBullets, RemoveBullet);
+            IGameListener.Register(this);
         }
 
         private void OnBulletCollision(Bullet bullet, Collision2D collision)
@@ -62,6 +62,11 @@ namespace ShootEmUp
             {
                 bullet.OnCollisionEntered += OnBulletCollision;
             }
+        }
+
+        public void OnFixedUpdate(float delta)
+        {
+            _levelBoundsChecker.CheckLevelBounds(_activeBullets, RemoveBullet);
         }
     }
 }

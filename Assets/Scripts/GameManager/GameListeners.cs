@@ -7,9 +7,9 @@ namespace ShootEmUp
     {
         public static event Action<IGameListener> OnRegister;
 
-        public void Register()
+        public static void Register(IGameListener listener)
         {
-            OnRegister?.Invoke(this);
+            OnRegister?.Invoke(listener);
         }
     }
 

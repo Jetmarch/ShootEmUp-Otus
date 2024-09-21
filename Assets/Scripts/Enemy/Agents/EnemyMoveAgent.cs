@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    public sealed class EnemyMoveAgent : MonoBehaviour
+    public sealed class EnemyMoveAgent : MonoBehaviour, IGameFixedUpdateListener
     {
         public bool IsReached
         {
@@ -20,20 +20,25 @@ namespace ShootEmUp
 
         private bool _isReached;
 
+        private void Start()
+        {
+            IGameListener.Register(this);
+        }
+
         public void SetDestination(Vector2 endPoint)
         {
             _destination = endPoint;
             _isReached = false;
         }
 
-        private void FixedUpdate()
+        public void OnFixedUpdate(float delta)
         {
             if (_isReached)
             {
                 return;
             }
 
-            Move(Time.fixedDeltaTime);
+            Move(delta);
         }
 
         private void Move(float delta)

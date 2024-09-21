@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    public sealed class Bullet : MonoBehaviour
+    public sealed class Bullet : MonoBehaviour, IGamePauseListener, IGameResumeListener, IGameFinishListener
     {
         public event Action<Bullet, Collision2D> OnCollisionEntered;
 
@@ -15,6 +15,13 @@ namespace ShootEmUp
 
         [SerializeField] private SpriteRenderer _spriteRenderer;
 
+        private Vector2 _velocity;
+
+        private void Start()
+        {
+            IGameListener.Register(this);
+        }
+
         private void OnCollisionEnter2D(Collision2D collision)
         {
             OnCollisionEntered?.Invoke(this, collision);
@@ -22,6 +29,7 @@ namespace ShootEmUp
 
         public void SetVelocity(Vector2 velocity)
         {
+            _velocity = velocity;
             _rb2D.velocity = velocity;
         }
 
@@ -38,6 +46,21 @@ namespace ShootEmUp
         public void SetColor(Color color)
         {
             _spriteRenderer.color = color;
+        }
+
+        public void OnPause()
+        {
+            _rb2D.velocity = Vector2.zero;
+        }
+
+        public void OnResume()
+        {
+            _rb2D.velocity = _velocity;
+        }
+
+        public void OnFinish()
+        {
+            _rb2D.velocity = Vector2.zero;
         }
     }
 }

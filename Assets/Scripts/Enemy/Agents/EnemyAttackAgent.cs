@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    public sealed class EnemyAttackAgent : MonoBehaviour
+    public sealed class EnemyAttackAgent : MonoBehaviour, IGameFixedUpdateListener
     {
         public delegate void FireHandler(GameObject enemy, Vector2 position, Vector2 direction);
 
@@ -17,6 +17,21 @@ namespace ShootEmUp
         private float _currentTime;
 
         private bool _isActive;
+
+        private void Start()
+        {
+            IGameListener.Register(this);
+        }
+
+        public void OnFixedUpdate(float delta)
+        {
+            if (!_isActive)
+            {
+                return;
+            }
+
+            DelayedAttack(delta);
+        }
 
         public void SetTarget(GameObject target)
         {
@@ -37,16 +52,6 @@ namespace ShootEmUp
         {
             _currentTime = _attackDelay;
             Deactivate();
-        }
-
-        private void FixedUpdate()
-        {
-            if(!_isActive)
-            {
-                return;
-            }
-
-            DelayedAttack(Time.fixedDeltaTime);
         }
 
         private void DelayedAttack(float delta)

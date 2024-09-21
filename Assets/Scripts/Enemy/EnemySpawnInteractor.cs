@@ -3,13 +3,23 @@ using UnityEngine;
 
 namespace ShootEmUp
 {
-    public class EnemySpawnInteractor : MonoBehaviour
+    public class EnemySpawnInteractor : MonoBehaviour, IGameStartListener
     {
         [SerializeField] private float _spawnDelay = 1f;
         
         [SerializeField] private EnemyManager _enemyManager;
 
-        private IEnumerator Start()
+        private void Start()
+        {
+            IGameListener.Register(this);
+        }
+
+        public void OnStart()
+        {
+            StartCoroutine(SpawnEnemies());
+        }
+
+        private IEnumerator SpawnEnemies()
         {
             while (true)
             {

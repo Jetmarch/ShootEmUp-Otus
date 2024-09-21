@@ -114,6 +114,7 @@ namespace ShootEmUp
             }
         }
 
+        [ContextMenu("Start game")]
         public void StartGame()
         {
             _state = GameState.Starting;
@@ -124,6 +125,7 @@ namespace ShootEmUp
             _state = GameState.Running;
         }
 
+        [ContextMenu("Finish game")]
         public void FinishGame()
         {
             _state = GameState.Finished;
@@ -133,6 +135,7 @@ namespace ShootEmUp
             }
         }
 
+        [ContextMenu("Pause game")]
         public void PauseGame()
         {
             _state = GameState.Paused;
@@ -142,6 +145,7 @@ namespace ShootEmUp
             }
         }
 
+        [ContextMenu("Resume game")]
         public void ResumeGame()
         {
             _state = GameState.Running;
